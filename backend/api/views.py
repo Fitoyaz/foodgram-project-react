@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from .filters import AuthorAndTagFilter, IngredientSearchFilter
-from .models import (ShoppingList, Favorite, Ingredient, IngredientRecipe,
+from .models import (Cart, Favorite, Ingredient, IngredientAmount,
                      Recipe, Tag)
 from .pagination import LimitPageNumberPagination
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
@@ -55,16 +55,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
             permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk=None):
         if request.method == 'GET':
-            return self.add_obj(ShoppingList, request.user, pk)
+            return self.add_obj(Cart, request.user, pk)
         elif request.method == 'DELETE':
-            return self.delete_obj(ShoppingList, request.user, pk)
+            return self.delete_obj(Cart, request.user, pk)
         return None
 
     @action(detail=False, methods=['get'],
             permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
         final_list = {}
-        ingredients = IngredientRecipe.objects.filter(
+        ingredients = IngredientAmount.objects.filter(
             recipe__cart__user=request.user).values_list(
             'ingredient__name', 'ingredient__measurement_unit',
             'amount')

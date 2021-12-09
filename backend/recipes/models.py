@@ -86,10 +86,10 @@ class Recipe(models.Model):
 
     author = models.ForeignKey(User, on_delete=models.CASCADE,
                                related_name='recipes', verbose_name='Автор')
-    title = models.CharField(max_length=256, verbose_name='Название')
+    name = models.CharField(max_length=256, verbose_name='Название')
     image = models.ImageField(upload_to=file_name, validators=[validate_image],
                               verbose_name='Изображение')
-    description = models.TextField(verbose_name='Описание')
+    text = models.TextField(verbose_name='Описание')
     ingredients = models.ManyToManyField(Ingredient,
                                          through='IngredientRecipe')
     tag = models.ManyToManyField(Tag, verbose_name='Тег')
@@ -102,7 +102,7 @@ class Recipe(models.Model):
                             verbose_name='Слаг')
 
     def __str__(self):
-        return '{}, {}'.format(self.title, self.cooking_time)
+        return '{}, {}'.format(self.name, self.cooking_time)
 
     class Meta:
         verbose_name = 'Рецепты'

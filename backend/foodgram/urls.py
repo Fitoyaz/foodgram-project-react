@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api', include('users.urls', namespace='api_users')),
+    path('api/', include('users.urls', namespace='api_users')),
     path('api/', include('api.urls', namespace='api'))
 ]
 #if settings.DEBUG:

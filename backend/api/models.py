@@ -58,12 +58,17 @@ class Ingredient(models.Model):
     name = models.CharField(max_length=256, verbose_name='Название')
     measurement_unit = models.CharField(max_length=64, verbose_name='Единицы измерения')
 
+    class Meta:
+        ordering = ['-id']
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'measurement_unit'],
+                                    name='unique ingredient')
+        ]
+
     def __str__(self):
         return '{}, {}'.format(self.name, self.measurement_unit)
-
-    class Meta:
-        verbose_name = 'Ингредиенты'
-        verbose_name_plural = 'Ингредиенты'
 
 
 class Recipe(models.Model):
@@ -87,12 +92,14 @@ class Recipe(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE,
                                related_name='recipes', verbose_name='Автор')
     name = models.CharField(max_length=256, verbose_name='Название')
-    image = models.ImageField(upload_to='recipes/', validators=[validate_image],
-                              verbose_name='Изображение', )
+    image = models.ImageField(upload_to='images/',
+                              verbose_name='Изображение')
     text = models.TextField(verbose_name='Описание')
 
     ingredients = models.ManyToManyField(Ingredient,
-                                         through='IngredientAmount')
+                                         through='IngredientAmount',
+                                         verbose_name='Ингридиенты',
+                                         related_name='recipes')
     tags = models.ManyToManyField(Tag, verbose_name='Тег')
     # pub_date = models.DateTimeField(auto_now=True,
     #                                verbose_name='Дата добавления')
@@ -108,7 +115,7 @@ class Recipe(models.Model):
 
     class Meta:
         ordering = ['-id']
-        verbose_name = 'Рецепты'
+        verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
 
@@ -123,8 +130,13 @@ class IngredientAmount(models.Model):
     #    return '{}, {}'.format(self.ingredient, self.amount)
 
     class Meta:
+        ordering = ['-id']
         verbose_name = 'Добавить ингредиент'
         verbose_name_plural = 'Ингредиенты для рецепта'
+        constraints = [
+            models.UniqueConstraint(fields=['ingredient', 'recipe'],
+                                    name='unique ingredients recipe')
+        ]
 
 
 class Favorite(models.Model):

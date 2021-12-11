@@ -26,6 +26,7 @@ class Tag(models.Model):
         )
 
     class Meta:
+        ordering = ['-id']
         verbose_name = 'Тег'
         verbose_name_plural = 'Тег'
 
@@ -92,7 +93,7 @@ class Recipe(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE,
                                related_name='recipes', verbose_name='Автор')
     name = models.CharField(max_length=256, verbose_name='Название')
-    image = models.ImageField(upload_to='images/',
+    image = models.ImageField(upload_to='images/', validators=[validate_image],
                               verbose_name='Изображение')
     text = models.TextField(verbose_name='Описание')
 

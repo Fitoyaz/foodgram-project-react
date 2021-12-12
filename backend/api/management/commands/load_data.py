@@ -14,4 +14,3 @@ class Command(BaseCommand):
             for row in reader:
                 name, unit = row
                 Ingredient.objects.get_or_create(name=name, unit=unit)
-                #print(name, unit)

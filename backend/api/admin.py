@@ -1,7 +1,12 @@
 from django.contrib import admin
 
-from .models import Ingredient, Recipe, IngredientAmount, Subscription, Tag, \
-    Favorite, Cart
+from .models import (Ingredient,
+                     Recipe,
+                     IngredientAmount,
+                     Subscription,
+                     Tag,
+                     Favorite,
+                     Cart)
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -64,8 +69,6 @@ class ShoppingListAdmin(admin.ModelAdmin):
     def get_recipe(self, obj):
         return obj.recipe.name
 
-
-# Register your models here.
 
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Ingredient)

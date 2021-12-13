@@ -12,7 +12,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from .filters import AuthorAndTagFilter, IngredientSearchFilter
 from .models import Cart, Favorite, Ingredient, IngredientAmount, Recipe, Tag
 from .pagination import LimitPageNumberPagination
-from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
+from .permissions import IsAdminOrReadOnly, ReviewOwnerPermission
 from .serializers import (CropRecipeSerializer, IngredientSerializer,
                           RecipeSerializer, TagSerializer)
 
@@ -36,7 +36,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     serializer_class = RecipeSerializer
     pagination_class = LimitPageNumberPagination
     filter_class = AuthorAndTagFilter
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [ReviewOwnerPermission]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

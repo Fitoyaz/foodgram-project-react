@@ -1,11 +1,12 @@
-from django.shortcuts import get_object_or_404
-from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
-from users.models import Follow
-from users.serializers import CustomUserSerializer
+from django.shortcuts import get_object_or_404
+from drf_extra_fields.fields import Base64ImageField
 
 from .models import Ingredient, IngredientAmount, Recipe, Tag
+
+from users.models import Follow
+from users.serializers import CustomUserSerializer
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -84,7 +85,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         if len(self.context['request'].data['tags']) == 0:
             raise serializers.ValidationError('Рецепт не может '
                                               'быть без тегов!')
-        if len(self.context['request'].data['tags']) > len(set(self.context['request'].data['tags'])):
+        if len(self.context['request'].data['tags']) > len(
+                set(self.context['request'].data['tags'])):
             raise serializers.ValidationError('Теги не могут повторяться!')
         if not ingredients:
             raise serializers.ValidationError({
@@ -123,12 +125,12 @@ class RecipeSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, recipe, validated_data):
-        if "ingredients" in self.initial_data:
+        if "ingredients" in self.validated_data:
             ingredients = validated_data.pop("ingredients")
             recipe.ingredients.clear()
             self.create_ingredients(ingredients, recipe)
-        if "tags" in self.initial_data:
-            tags_data = self.initial_data.get('tags')
+        if "tags" in self.validated_data:
+            tags_data = self.validated_data.get('tags')
             recipe.tags.set(tags_data)
         return super().update(recipe, validated_data)
 

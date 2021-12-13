@@ -15,12 +15,6 @@ class Tag(models.Model):
     color = models.CharField(max_length=7, verbose_name='Цвет')
     slug = models.SlugField(verbose_name='Слаг')
 
-    def color_name(self):
-        return format_html(
-            '<span style="color: {};">Текст</span>',
-            self.color,
-        )
-
     class Meta:
         ordering = ['-id']
         verbose_name = 'Тег'
@@ -28,6 +22,12 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+    def color_name(self):
+        return format_html(
+            '<span style="color: {};">Текст</span>',
+            self.color,
+        )
 
 
 class Subscription(models.Model):
@@ -38,10 +38,6 @@ class Subscription(models.Model):
                                related_name='author_subscriptions',
                                verbose_name='Автор')
 
-    def get_recipes(self):
-        return Recipe.objects.select_related('author').filter(
-            author__username=self.author)
-
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
@@ -49,6 +45,10 @@ class Subscription(models.Model):
             models.UniqueConstraint(fields=['user', 'author'],
                                     name='unique_subscription'),
         ]
+
+    def get_recipes(self):
+        return Recipe.objects.select_related('author').filter(
+            author__username=self.author)
 
 
 class Ingredient(models.Model):

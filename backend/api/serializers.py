@@ -78,6 +78,14 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         ingredients = self.context['request'].data['ingredients']
+        if int(self.context['request'].data['cooking_time']) < 1:
+            raise serializers.ValidationError('Время приготовления не может '
+                                              'быть меньше одной минуты!')
+        if len(self.context['request'].data['tags']) == 0:
+            raise serializers.ValidationError('Рецепт не может '
+                                              'быть без тегов!')
+        if len(self.context['request'].data['tags']) > len(set(self.context['request'].data['tags'])):
+            raise serializers.ValidationError('Теги не могут повторяться!')
         if not ingredients:
             raise serializers.ValidationError({
                 'ingredients': 'Нужен хоть один ингридиент для рецепта'})

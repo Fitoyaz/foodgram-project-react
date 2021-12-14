@@ -7,7 +7,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Follow
-
 from api.pagination import LimitPageNumberPagination
 from api.serializers import FollowSerializer
 

@@ -84,9 +84,17 @@ class RecipeViewSet(viewsets.ModelViewSet):
         page.drawString(200, 800, 'Список ингредиентов')
         page.setFont('signature', size=16)
         height = 750
+
         for i, (name, data) in enumerate(final_list.items(), 1):
+            if i % 29 == 0:
+                page.showPage()
+                page.setFont('signature', size=24)
+                page.drawString(200, 800, 'Список ингредиентов')
+                page.setFont('signature', size=16)
+                height = 750
+
             page.drawString(75, height, (f'{i}. {name} - {data["amount"]}, '
-                                         f'{data["measurement_unit"]}'))
+                                         f'{data["measurement_unit"]} '))
             height -= 25
         page.showPage()
         page.save()
